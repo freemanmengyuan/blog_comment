@@ -92,11 +92,11 @@ func TestCommandPrintFuncCancel(t *testing.T) {
 		}
 	}()
 	// 继续执行
-	time.Sleep(1 * time.Second)
+	time.Sleep(5 * time.Second)
 	// 清空chan byte,中断子协程运行
 	cancelFunc()
 
-	// 在main协程中等待子协程的推出，并打印执行结果
+	// 在main协程中等待子协程的退出，并打印执行结果
 	res = <-resultChan
 	// 打印子进程的输出
 	fmt.Printf("执行输出: %s \n", res.output)
