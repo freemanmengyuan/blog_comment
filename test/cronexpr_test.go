@@ -7,7 +7,10 @@ import (
 	"time"
 )
 
-func TestCronexprDemo(t *testing.T) {
+/**
+ * 执行调度
+ */
+func TestCronexprDemo1(t *testing.T) {
 	var (
 		expr *cronexpr.Expression
 		err error
@@ -34,6 +37,4 @@ func TestCronexprDemo(t *testing.T) {
 	time.Sleep(5*time.Second)
 	// fmt.Println(now)
 	// fmt.Println(nextTime)
-
-
 }
