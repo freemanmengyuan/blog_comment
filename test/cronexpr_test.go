@@ -108,3 +108,18 @@ func TestCronexprMoreJob(t *testing.T) {
 
 	time.Sleep(100 * time.Second)
 }
+
+func TestSimple(t *testing.T) {
+	arr := [5]int{1,2,3,4,5}
+	// 启动一个协程进行测试
+	go func() {
+		for {
+			for k, v := range arr {
+				fmt.Println(k, v)
+			}
+			time.Sleep(100*time.Millisecond) // 睡眠100毫秒
+		}
+	}()
+
+	time.Sleep(100 * time.Second)
+}
