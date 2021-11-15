@@ -40,6 +40,7 @@ func TestCommandPrint(t *testing.T) {
 
 	// 生成cmd
 	cmd = exec.Command("/bin/bash", "-c", "echo 1;echo 2; ls -la")
+	// 这里底层是开启了一个子进程去执行
 	// 执行命令，捕获子进程的输出（pipe）
 	if output, err = cmd.CombinedOutput(); err != nil {
 		fmt.Println(err)
@@ -53,6 +54,10 @@ func TestCommandPrint(t *testing.T) {
 /**
  * 执行一个cmd 让他执行2秒 sleep 2; echo hello;
  * 1秒的时候，我们杀死cmd
+ * 执行的原理:
+ * 使用context包，获取上下文和取消子协程的方法
+ * 将上下文传递到子协程里，并且在子协程里捕获输出
+ * 在主协程里等待channel
  */
 type result struct {
 	err    error
@@ -95,7 +100,6 @@ func TestCommandPrintFuncCancel(t *testing.T) {
 	time.Sleep(5 * time.Second)
 	// 清空chan byte,中断子协程运行
 	cancelFunc()
-
 	// 在main协程中等待子协程的退出，并打印执行结果
 	res = <-resultChan
 	// 打印子进程的输出

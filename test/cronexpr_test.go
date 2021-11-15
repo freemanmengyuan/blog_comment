@@ -18,7 +18,6 @@ func TestCronexprDemo1(t *testing.T) {
 		nextTime time.Time
 	)
 	// 那一分钟(0-59)，那小时(0-23)，那天（1-31），那月(1-12)，星期几(0-6)
-
 	// 每隔5分钟执行一次
 	if expr, err = cronexpr.Parse("*/5 * * * * * *"); err != nil {
 		fmt.Println(err)
@@ -68,7 +67,7 @@ func TestCronexprMoreJob(t *testing.T) {
 	// 将任务注册到调度表
 	scheduleTable["job1"] = cronJob
 
-	expr = cronexpr.MustParse("*/5 * * * * * *")
+	expr = cronexpr.MustParse("*/10 * * * * * *")
 	cronJob = &CronJob{
 		expr: expr,
 		nextTime: expr.Next(now),
@@ -95,7 +94,7 @@ func TestCronexprMoreJob(t *testing.T) {
 					}(jobName)
 					// 计算下次调度的时间
 					cronJob.nextTime = cronJob.expr.Next(now)
-					fmt.Println("计算出下次调度的时间是：", cronJob.nextTime)
+					fmt.Println("计算出下次调度的时间是：", cronJob.nextTime, jobName)
 				}
 			}
 
