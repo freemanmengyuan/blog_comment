@@ -25,9 +25,9 @@ func TestCronexprDemo1(t *testing.T) {
 	}
 	// 当前时间
 	now = time.Now()
+	fmt.Println("当前时间：", now)
 	// 下次调度的时间
 	nextTime = expr.Next(now)
-
 	// 等待定时器超时
 	time.AfterFunc(nextTime.Sub(now), func() {
 		fmt.Println("被调度了：", nextTime)
@@ -97,14 +97,13 @@ func TestCronexprMoreJob(t *testing.T) {
 					fmt.Println("计算出下次调度的时间是：", cronJob.nextTime, jobName)
 				}
 			}
-
+			// 暂停100ms避免cpu占满
 			// time.Sleep(100*time.Millisecond) // 睡眠100毫秒
 			select {
 			case <- time.NewTimer(100 * time.Millisecond).C:
 			}
 		}
 	}()
-
 	time.Sleep(100 * time.Second)
 }
 
@@ -121,4 +120,12 @@ func TestSimple(t *testing.T) {
 	}()
 
 	time.Sleep(100 * time.Second)
+}
+
+func TestSelect(t *testing.T) {
+	fmt.Println("hello world")
+
+	select {
+	case <- time.NewTimer(1000 * time.Millisecond).C:
+	}
 }
