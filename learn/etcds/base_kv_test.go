@@ -31,7 +31,6 @@ import (
 // go get go.etcd.io/etcd/clientv3   也可以借助golang中国来下载
 // 如果运行失败 replace google.golang.org/grpc => google.golang.org/grpc v1.26.0
 func TestClient(t *testing.T) {
-	t.Log("hello")
 	var (
 		config clientv3.Config
 		err error
@@ -55,7 +54,7 @@ func TestKVPut(t *testing.T) {
 	var (
 		config clientv3.Config
 		err error
-		cli *clientv3.Client
+		client *clientv3.Client
 		kv clientv3.KV
 		putResp *clientv3.PutResponse
 	)
@@ -65,12 +64,12 @@ func TestKVPut(t *testing.T) {
 		DialTimeout: 5*time.Second,
 	}
 	// 建立一个客户端
-	if cli,err = clientv3.New(config); err != nil{
+	if client,err = clientv3.New(config); err != nil{
 		t.Log(err)
 		return
 	}
 	// 用于读写etcd的键值对
-	kv = clientv3.NewKV(cli)
+	kv = clientv3.NewKV(client)
 	if putResp, err = kv.Put(context.TODO(), "/cron/jobs/job4", "client test4", clientv3.WithPrevKV()); err != nil {
 		t.Log(err)
 	} else {
@@ -84,10 +83,10 @@ func TestKVPut(t *testing.T) {
 // 获取
 func TestKVGet(t *testing.T) {
 	var (
-		config clientv3.Config
-		err error
-		cli *clientv3.Client
-		kv clientv3.KV
+		config  clientv3.Config
+		err     error
+		client  *clientv3.Client
+		kv      clientv3.KV
 		getResp *clientv3.GetResponse
 	)
 	// 客户端配置
@@ -96,14 +95,14 @@ func TestKVGet(t *testing.T) {
 		DialTimeout: 5*time.Second,
 	}
 	// 建立一个客户端
-	if cli,err = clientv3.New(config); err != nil{
+	if client,err = clientv3.New(config); err != nil{
 		t.Log(err)
 		return
 	}
 	// 用于读写etcd的键值对
-	kv = clientv3.NewKV(cli)
+	kv = clientv3.NewKV(client)
 	// 读取单个键值
-	// if getResp, err = kv.Get(context.TODO(), "/cron/jobs/job3" /*clientv3.WithCountOnly()*/); err != nil {
+	// if getResp, err = kv.Get(context.TODO(), "/cron/jobs/job3"/*, clientv3.WithCountOnly()*/); err != nil {
 	//	t.Log(err)
 	//} else {
 	//	t.Log("Value:", getResp.Kvs, getResp.Count)
@@ -143,11 +142,12 @@ func TestKVDel(t *testing.T) {
 	// clientv3.WithFromKey()  clientv3.WithLimit() 删除从指定键开始的固定个数的key
 	if delResp, err = kv.Delete(context.TODO(), "/cron/jobs/job4", clientv3.WithPrevKV()); err != nil {
 		t.Log(err)
+		return
 	}
 	//被删除之前value是什么
 	if len(delResp.PrevKvs) > 0 {
-		for _, kv := range delResp.PrevKvs {
-			t.Log("删除了：",string(kv.Key), string(kv.Value))
+		for _, v := range delResp.PrevKvs {
+			t.Log("删除了：",string(v.Key), string(v.Value))
 		}
 	}
 }
