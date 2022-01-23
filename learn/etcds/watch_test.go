@@ -21,6 +21,7 @@ func TestWatchKey(t *testing.T){
 		watchRespChan <-chan clientv3.WatchResponse
 		watchResp clientv3.WatchResponse
 		event *clientv3.Event
+		cancel context.CancelFunc
 	)
 	// 客户端配置
 	config = clientv3.Config{
@@ -62,10 +63,14 @@ func TestWatchKey(t *testing.T){
 	// 启动监听
 	fmt.Println("从该版本向后监听：", watchStartRevision)
 
-	ctx, _ = context.WithCancel(context.TODO())
+	// 监听10秒后取消
+	ctx, cancel = context.WithCancel(context.TODO())
+	time.AfterFunc(10*time.Second, func() {
+		cancel()
+	})
 
 	watchRespChan = watcher.Watch(ctx, "/cron/jobs/job7", clientv3.WithRev(watchStartRevision))
-
+	// 接收监听到的消息
 	for watchResp = range watchRespChan {
 		for _, event = range  watchResp.Events {
 			switch event.Type {
