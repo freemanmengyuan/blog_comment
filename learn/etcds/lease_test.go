@@ -2,6 +2,7 @@ package etcds
 
 import (
 	"context"
+	"fmt"
 	"go.etcd.io/etcd/clientv3"
 	"testing"
 	"time"
@@ -130,4 +131,39 @@ func TestLeaseKeepAlive(t *testing.T) {
 			break
 		}
 	}
+}
+
+
+type P struct {
+	int
+}
+
+func (t P) testT() {
+	fmt.Println("类型 *T 方法集包含全部 receiver T 方法。")
+}
+
+func (t *P) testP() {
+	fmt.Println("类型 *T 方法集包含全部 receiver *T 方法。")
+}
+
+func TestNoName(t *testing.T) {
+	t.Log("hello")
+
+	t1 := P{1}
+	t2 := &t1
+	t1.testT()
+	fmt.Printf("t2 is : %v\n", t2)
+	t2.testT()
+	t2.testP()
+}
+
+func TestSliceDemo(t *testing.T) {
+	var s []int
+	s = append(s, 1)
+	t.Log(s)
+
+	// var m map[string]string
+	m := make(map[string]string)
+	m["name"] = "mengyuan"
+	t.Log(m)
 }
