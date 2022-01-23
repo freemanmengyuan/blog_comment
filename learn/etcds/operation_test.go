@@ -54,7 +54,7 @@ func TestOperation(t *testing.T){
 		t.Log(err)
 		return
 	}
-	// 打印
+	// 打印数据
 	t.Log("数据Revision:", getResp.Get().Header.Revision)
 	t.Log("数据value:", string(getResp.Get().Kvs[0].Value))
 }
