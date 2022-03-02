@@ -36,7 +36,7 @@ func TestFindLimit(t *testing.T) {
 
 	// 4.按照jobName字段过滤，找出记录
 	cond = &FindByName{
-		JobName: "job10",
+		JobName: "job1",
 	}
 	// 5.查询 (过滤加翻页)
 	var skip,limit int64
